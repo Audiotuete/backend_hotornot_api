@@ -34,7 +34,7 @@ class Question(models.Model):
 
 class UserAnswer(models.Model):
   user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
-  question = models.ForeignKey(Question, on_delete=models.CASCADE )
+  question = models.ForeignKey('Question', on_delete=models.CASCADE )
   answer_value = models.IntegerField(default=-1, validators=[MaxValueValidator(2), MinValueValidator(-1)])
   answer_note = models.TextField(max_length=250, null=True, blank=True)
   first_touched = models.DateTimeField(null=True, blank=True)

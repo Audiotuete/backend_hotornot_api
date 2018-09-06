@@ -1,0 +1,58 @@
+version: '3'
+
+volumes:
+  production_postgres_data: {}
+  production_postgres_data_backups: {}
+  production_caddy: {}
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: ./compose/production/django/Dockerfile
+    image: backend_hotornot_api_production_django
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - ./.envs/.production/.django
+      - ./.envs/.production/.postgres
+    command: /start
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: backend_hotornot_api_production_postgres
+    volumes:
+      - production_postgres_data:/var/lib/postgresql/data
+      - production_postgres_data_backups:/backups
+    env_file:
+      - ./.envs/.production/.postgres
+
+  pgadmin:
+    image: dpage/pgadmin4
+    env_file:
+      - ./.envs/.local/.pgadmin
+    ports:
+      - "8181:80"
+    links:
+      - postgres
+
+  caddy:
+    build:
+      context: .
+      dockerfile: ./compose/production/caddy/Dockerfile
+    image: backend_hotornot_api_production_caddy
+    depends_on:
+      - django
+    volumes:
+      - production_caddy:/root/.caddy
+    env_file:
+      - ./.envs/.production/.caddy
+    ports:
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
+
+  redis:
+    image: redis:3.2

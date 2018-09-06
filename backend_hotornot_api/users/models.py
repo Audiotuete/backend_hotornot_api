@@ -3,7 +3,8 @@ from django.db.models import CharField, BooleanField
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
-from app_hotornot.models import Question, UserAnswer
+from app_hotornot.models import QuestionOpen, QuestionYesOrNo, QuestionMultiple, UserAnswerOpen, UserAnswerYesOrNo, UserAnswerMultiple
+
 
 class User(AbstractUser):
 
@@ -25,13 +26,30 @@ class User(AbstractUser):
 
       super(User, self).save(*args, **kwargs)
       
-      all_questions = Question.objects.all()
+      open_questions = QuestionOpen.objects.all()
+      multiple_choice_questions = QuestionMultiple.objects.all()
+      yes_or_no_questions = QuestionYesOrNo.objects.all()
+
       useranswer_list = []
+ 
+      for new_question in open_questions:
+        useranswer_list.append(UserAnswerOpen(user = self, question = new_question))
+      UserAnswerOpen.objects.bulk_create(useranswer_list)
+
+      useranswer_list = []
+ 
+      for new_question in multiple_choice_questions:
+        useranswer_list.append(UserAnswerMultiple(user = self, question = new_question))
+      UserAnswerMultiple.objects.bulk_create(useranswer_list)
+
+      useranswer_list = []  
+
+      for new_question in yes_or_no_questions:
+        useranswer_list.append(UserAnswerYesOrNo(user = self, question = new_question))
       
-      for new_question in all_questions:
-        useranswer_list.append(UserAnswer(user = self, question = new_question))
-      
-      UserAnswer.objects.bulk_create(useranswer_list)
+      UserAnswerYesOrNo.objects.bulk_create(useranswer_list)
+      useranswer_list = []  
+
     # End
     else:
       super(User, self).save(*args, **kwargs)

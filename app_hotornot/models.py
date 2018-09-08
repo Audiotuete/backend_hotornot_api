@@ -31,20 +31,21 @@ class Question(models.Model):
       subclass_name = self.__class__.__name__
       
       if subclass_name == 'QuestionYesOrNo':
-        for new_user in all_users:
-          useranswer_list.append(UserAnswerYesOrNo(user = new_user, question = self))
+        for a_user in all_users:
+          useranswer_list.append(UserAnswerYesOrNo(user = a_user, question = self))
 
         UserAnswerYesOrNo.objects.bulk_create(useranswer_list)
 
       elif subclass_name == 'QuestionOpen':
-        for new_user in all_users:
-          useranswer_list.append(UserAnswerOpen(user = new_user, question = self))
+        for a_user in all_users:
+  
+          useranswer_list.append(UserAnswerOpen(user = a_user, question = self))
 
         UserAnswerOpen.objects.bulk_create(useranswer_list)
 
       elif subclass_name == 'QuestionMultiple':
-        for new_user in all_users:
-          useranswer_list.append(UserAnswerMultiple(user = new_user, question = self))
+        for a_user in all_users:
+          useranswer_list.append(UserAnswerMultiple(user = a_user, question = self))
 
         UserAnswerMultiple.objects.bulk_create(useranswer_list)
       else:
@@ -61,6 +62,9 @@ class QuestionOpen(Question):
 
 class QuestionMultiple(Question):
   options = ArrayField(models.CharField(max_length=150, blank=True), default=list, null=True, size=4)
+  # option_set = models.ForeignKey('OptionSet', on_delete=models.CASCADE, default=1 )
+  
+  pass
 
 class UserAnswer(models.Model):
   user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
@@ -77,7 +81,7 @@ class UserAnswer(models.Model):
 
 class UserAnswerYesOrNo(UserAnswer):
   question = models.ForeignKey('QuestionYesOrNo', on_delete=models.CASCADE )
-  answer_value = models.IntegerField(default=-1, validators=[MaxValueValidator(2), MinValueValidator(-1)])
+  answer_value = models.IntegerField(default=-1, validators=[MaxValueValidator(2), MinValueValidator(0)])
   answer_note = models.TextField(max_length=250, null=True, blank=True)
 
 class UserAnswerOpen(UserAnswer):
@@ -86,7 +90,19 @@ class UserAnswerOpen(UserAnswer):
 
 class UserAnswerMultiple(UserAnswer):
   question = models.ForeignKey('QuestionMultiple', on_delete=models.CASCADE )
+  answer_choice_key = models.IntegerField(default=-1, validators=[MinValueValidator(0)])
+  # option_set = models.ForeignKey('OptionSet', on_delete=models.CASCADE, default=1 )
   # option = models.ForeignKey('Option', on_delete=models.CASCADE )
+
+# class OptionSet(models.Model):
+#   set_name = models.CharField(max_length=150, null=True, blank=True)
+
+#   def __str__(self):
+#     return str(self.set_name)
+
+
+
+
 
  
 

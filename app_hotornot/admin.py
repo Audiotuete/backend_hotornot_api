@@ -32,6 +32,7 @@ class UserAnswerMultipleAdmin(admin.ModelAdmin):
   def has_delete_permission(self, request, obj=None):
     return False
 
+# admin.site.register(OptionSet)
 admin.site.register(QuestionOpen)
 admin.site.register(QuestionYesOrNo)
 admin.site.register(QuestionMultiple)

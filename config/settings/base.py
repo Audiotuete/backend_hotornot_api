@@ -72,6 +72,8 @@ THIRD_PARTY_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'graphene_django',
+    'corsheaders',
+
 ]
 LOCAL_APPS = [
     'backend_hotornot_api.users.apps.UsersAppConfig',
@@ -136,12 +138,13 @@ AUTH_PASSWORD_VALIDATORS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    # 'graphql_jwt.middleware.JSONWebTokenMiddleware',
 ]
 
 # STATIC
@@ -245,3 +248,6 @@ SOCIALACCOUNT_ADAPTER = 'backend_hotornot_api.users.adapters.SocialAccountAdapte
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+CORS_ORIGIN_WHITELIST = (
+    'localhost:8080',
+)

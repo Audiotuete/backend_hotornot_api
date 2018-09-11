@@ -13,7 +13,7 @@ urlpatterns = [
     # path("", 
     #     TemplateView.as_view(template_name="pages/app.html"), 
     #     name="app"),
-    path("home/", 
+    path("", 
         TemplateView.as_view(template_name="pages/home.html"), 
         name="home"),
     path(

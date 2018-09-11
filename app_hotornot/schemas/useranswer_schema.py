@@ -4,14 +4,14 @@ from graphene_django import DjangoObjectType
 
 from ..models import UserAnswer
 from .user_schema import UserType
-from .question_schema import QuestionType
+from .question_schema import QuestionMultipleType
 
 
 class UserAnswerType(DjangoObjectType):
   class Meta:
     model = UserAnswer
 
-class Query(graphene.ObjectType):
+class Query(object):
   user_answers = graphene.List(UserAnswerType)
 
   def resolve_user_answers(self, info, **kwargs):
@@ -19,7 +19,7 @@ class Query(graphene.ObjectType):
 
 class UpdateUserAnswer(graphene.Mutation):
   user = graphene.Field(UserType)
-  question = graphene.Field(QuestionType)
+  question = graphene.Field(QuestionMultipleType)
   answer_value = graphene.Int()
   answer_note = graphene.String()
   first_touched = graphene.types.datetime.DateTime()

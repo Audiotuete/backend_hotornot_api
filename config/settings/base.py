@@ -73,6 +73,7 @@ THIRD_PARTY_APPS = [
     'allauth.socialaccount',
     'graphene_django',
     'corsheaders',
+    'ordered_model',
 
 ]
 LOCAL_APPS = [
@@ -144,7 +145,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    'graphql_jwt.middleware.JSONWebTokenMiddleware',
 ]
 
 # STATIC

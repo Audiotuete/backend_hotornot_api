@@ -3,21 +3,33 @@ from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
+from ordered_model.models import OrderedModel
 
 
-class Question(models.Model):
+# class Poll(models.Model):
+#   name = models.CharField(max_length=50)
+#   description = models.TextField(max_length=250)
+  
+#   def __str__(self):
+#     return self.name
+
+
+class Question(OrderedModel):
+  # poll = models.ForeignKey('Poll', on_delete=models.CASCADE)
   question_text = models.TextField(max_length=250)
   question_videolink = models.CharField(max_length=150, null=True, blank=True)
   question_imagelink = models.CharField(max_length=150, null=True, blank=True)
   pub_date = models.DateTimeField(auto_now_add=True)
-  # answers = models.ManyToManyField(User, through='User_Answer', unique=True)
+
+  order_class_path = __module__ + '.Question'
+  # position = PositionField(collection='poll', parent_link='question_ptr')
 
   class Meta:
-    abstract = True
+    ordering = ('order',)
+    # abstract = True
 
   def __str__(self):
     return self.question_text
-
 
   def save(self, *args, **kwargs):
     User = get_user_model()
@@ -27,6 +39,10 @@ class Question(models.Model):
       
       all_users = User.objects.all()
       useranswer_list = []
+      # for a_user in all_users:
+      #     useranswer_list.append(UserAnswer(user = a_user, question = self))
+
+      # UserAnswer.objects.bulk_create(useranswer_list)     
 
       subclass_name = self.__class__.__name__
       
@@ -62,12 +78,9 @@ class QuestionOpen(Question):
 
 class QuestionMultiple(Question):
   options = ArrayField(models.CharField(max_length=150, blank=True), default=list, null=True, size=4)
-  # option_set = models.ForeignKey('OptionSet', on_delete=models.CASCADE, default=1 )
-  
-  pass
 
 class UserAnswer(models.Model):
-  user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
+  user = models.ForeignKey(settings.AUTH_USER_MODEL, default=0, on_delete=models.CASCADE)
   first_touched = models.DateTimeField(null=True, blank=True)
   last_touched = models.DateTimeField(auto_now=True)
   count_touched = models.PositiveIntegerField(default=0)

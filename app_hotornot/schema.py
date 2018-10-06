@@ -2,7 +2,7 @@ import graphene
 import graphql_jwt
 
 
-from .schemas.question_schema import Query as QuestionQuery
+from .schemas.question_schema import AllQuesetions
 from .schemas.question_schema import QuestionMultipleType, QuestionOpenType, QuestionYesOrNoType
 
 
@@ -16,7 +16,7 @@ from .schemas.useranswer_schema import Mutation as UserAnswerMutation
 
 class Query(
   UserQuery,
-  QuestionQuery,
+  AllQuesetions,
   UserAnswerQuery,
   graphene.ObjectType
 ):

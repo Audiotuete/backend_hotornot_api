@@ -1,5 +1,6 @@
 import graphene
 from graphene_django import DjangoObjectType
+from graphene_django.filter import DjangoFilterConnectionField
 from itertools import chain
 
 from ..models import Question, QuestionMultiple, QuestionOpen, QuestionYesOrNo
@@ -26,7 +27,7 @@ class QuestionYesOrNoType(DjangoObjectType):
     model = QuestionYesOrNo
     interfaces = [ BaseQuestion ]
 
-class Query(graphene.ObjectType):
+class AllQuesetions(graphene.ObjectType):
   all_questions = graphene.List(BaseQuestion)
 
   def resolve_all_questions(self, info, **kwargs):
